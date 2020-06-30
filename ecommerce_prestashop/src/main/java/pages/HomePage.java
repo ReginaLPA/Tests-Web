@@ -1,0 +1,64 @@
+package pages;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+public class HomePage {
+private WebDriver driver;
+	
+	List<WebElement> listaProdutos = new ArrayList<WebElement>();
+	
+	private By textoProdutosNoCarrinho = By.className("cart-products-count");
+	
+	private By produtos = By.className("product-description");
+	
+	private By descricoesProdutos = By.cssSelector(".product-description a");
+	
+	private By precoProdutos = By.className("price");
+
+	public HomePage(WebDriver driver) {
+		this.driver = driver;
+	}
+
+	public int contarProdutos(){
+		carregarListaProdutos();
+		return listaProdutos.size();
+		
+	}
+	private void carregarListaProdutos() {
+		listaProdutos = driver.findElements(produtos);
+	}
+	
+	public int obterQuantidadeProdutosNoCarinho() {
+		
+		String quantidadeProdutosNoCarrinho = driver.findElement(textoProdutosNoCarrinho).getText();
+		
+		quantidadeProdutosNoCarrinho = quantidadeProdutosNoCarrinho.replace("(","");
+		quantidadeProdutosNoCarrinho = quantidadeProdutosNoCarrinho.replace(")","");
+		
+		int qtdeProdutosNoCarrinho = Integer.parseInt(quantidadeProdutosNoCarrinho);
+		
+		return qtdeProdutosNoCarrinho;
+	}
+	
+	public String obterNomeProduto(int indice) {
+		return driver.findElements(descricoesProdutos).get(indice).getText();
+		
+		
+	}
+	
+	public String obterPrecoProduto(int indice) {
+		return driver.findElements(precoProdutos).get(indice).getText();
+	}
+	
+	public ProdutoPage clicarProduto(int indice) {
+		driver.findElements(descricoesProdutos).get(indice).click();
+		return new ProdutoPage(driver);
+	}
+	
+
+}
